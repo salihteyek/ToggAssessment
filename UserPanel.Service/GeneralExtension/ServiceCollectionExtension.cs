@@ -8,6 +8,8 @@ using UserPanel.Service.Services;
 using UserPanel.Core.Models;
 using Microsoft.AspNetCore.Identity;
 using UserPanel.Data;
+using UserPanel.Service.Services.RabbitMQ;
+using UserPanel.Core.Services.RabbitMQ;
 
 namespace UserPanel.Service.GeneralExtension
 {
@@ -30,5 +32,9 @@ namespace UserPanel.Service.GeneralExtension
             
             return serviceCollection;
         }
+
+        public static IServiceCollection ConfigureRabbit(this IServiceCollection services) =>
+            services.AddSingleton<RabbitMQContext>()
+            .AddTransient<IRabbitManager, RabbitManager>();
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using RabbitMQ.Client;
 using UserPanel.Core.Dtos;
 using UserPanel.Core.Models;
 using UserPanel.Core.Services;
+using UserPanel.Core.Services.RabbitMQ;
 using UserPanel.Core.UnitOfWork;
 using UserPanel.Service.Mapping;
 using UserPanel.Shared.Dtos;
@@ -14,12 +16,18 @@ namespace UserPanel.Service.Services
         private readonly ITokenService _tokenService;
         private readonly UserManager<AppUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IRabbitManager _rabbitManager;
 
-        public AuthenticationService(ITokenService tokenService, UserManager<AppUser> userManager, IUnitOfWork unitOfWork)
+        public string ExchangeName = "SendRegisteredUser";
+        public string RoutingName = "route-registered-user";
+        public string QueueName = "queue-registered-user";
+
+        public AuthenticationService(ITokenService tokenService, UserManager<AppUser> userManager, IUnitOfWork unitOfWork, IRabbitManager rabbitManager)
         {
             _tokenService = tokenService;
             _userManager = userManager;
             _unitOfWork = unitOfWork;
+            _rabbitManager = rabbitManager;
         }
 
         public async Task<Response<TokenDto>> LoginAsync(LoginDto loginDto)
@@ -56,6 +64,9 @@ namespace UserPanel.Service.Services
                 var errors = result.Errors.Select(x => x.Description).ToList();
                 return Response<AppUserDto>.Fail(new ErrorDto(errors, true), 400);
             }
+
+            _rabbitManager.Publish(user, ExchangeName, ExchangeType.Headers, RoutingName, QueueName);
+
             return Response<AppUserDto>.Success(ObjectMapper.Mapper.Map<AppUserDto>(user), 200);
         }
     }
