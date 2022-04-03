@@ -1,0 +1,45 @@
+﻿syntax = "proto3";
+
+package paneluserpackage;
+
+service PanelUserService {
+	rpc TakeRegisteredUser(RegisteredUserRequest) returns (RegisteredUserResponse);
+	rpc EditUser(EditUserRequest) returns (EditUserResponse);
+	rpc GetUsers(Empty) returns (UsersResponse);
+}
+
+message PanelUserModel {
+	string Id = 1;
+	string FullName = 2;
+	string UserName = 3;
+	string Email = 4;
+	bool Active = 5;
+	string UserStatus = 6;
+}
+
+message RegisteredUserRequest {
+	PanelUserModel panelUserModel = 1;
+}
+
+message RegisteredUserResponse {
+	string Id = 1;
+	string UserStatus = 2;
+}
+
+message EditUserRequest {
+	string Id = 1;
+	string UserStatus = 2;
+	bool Active = 3;
+}
+
+message EditUserResponse {
+	string Id = 1;
+	string UserStatus = 2;
+	bool Active = 3;
+}
+
+message UsersResponse {
+	repeated PanelUserModel panelUserModel = 1;
+}
+
+message Empty {}
