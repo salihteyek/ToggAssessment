@@ -5,6 +5,7 @@ using UserPanel.Core.Services;
 using UserPanel.Core.UnitOfWork;
 using UserPanel.Service.Mapping;
 using UserPanel.Shared.Dtos;
+using UserPanel.Shared.Enums;
 
 namespace UserPanel.Service.Services
 {
@@ -32,6 +33,12 @@ namespace UserPanel.Service.Services
 
             if (!await _userManager.CheckPasswordAsync(user, loginDto.Password))
                 return Response<TokenDto>.Fail("Email or Password is wrong", 400, true);
+
+            if (!user.Active)
+                return Response<TokenDto>.Fail("Your account is not active", 400, true);
+
+            if(user.UserStatus != UserStatus.Accept)
+                return Response<TokenDto>.Fail(user.UserStatus == UserStatus.Decline ? "Your account has been blocked" : "Your account is awaiting approval", 400, true);
 
             var token = _tokenService.CreateToken(user);
 
