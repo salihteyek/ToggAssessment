@@ -4,9 +4,8 @@ package paneluserpackage;
 
 service PanelUserService {
 	rpc TakeRegisteredUser(RegisteredUserRequest) returns (RegisteredUserResponse);
-	rpc SendRegisteredUserConfirm(RegisteredUserStatusRequest) returns (RegisteredUserStatusResponse);
-	rpc SendUserStatus(UserStatusRequest) returns (UserStatusResponse);
-	rpc GetUsers(UsersRequest) returns (Empty);
+	rpc EditUser(EditUserRequest) returns (EditUserResponse);
+	rpc GetUsers(Empty) returns (UsersResponse);
 }
 
 message PanelUserModel {
@@ -27,25 +26,19 @@ message RegisteredUserResponse {
 	string UserStatus = 2;
 }
 
-message RegisteredUserStatusRequest {
-	string Id = 1;
-}
-
-message RegisteredUserStatusResponse {
+message EditUserRequest {
 	string Id = 1;
 	string UserStatus = 2;
+	bool Active = 3;
 }
 
-message UserStatusRequest {
+message EditUserResponse {
 	string Id = 1;
+	string UserStatus = 2;
+	bool Active = 3;
 }
 
-message UserStatusResponse {
-	string Id = 1;
-	bool Active = 2;
-}
-
-message UsersRequest {
+message UsersResponse {
 	repeated PanelUserModel panelUserModel = 1;
 }
 

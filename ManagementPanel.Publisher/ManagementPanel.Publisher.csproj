@@ -7,12 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.2.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ManagementPanel.Data\ManagementPanel.Data.csproj" />
-    <ProjectReference Include="..\ManagementPanel.Publisher\ManagementPanel.Publisher.csproj" />
+    <ProjectReference Include="..\ManagementPanel.Core\ManagementPanel.Core.csproj" />
   </ItemGroup>
 
 </Project>

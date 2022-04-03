@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Identity;
 using UserPanel.Data;
 using UserPanel.Service.Services.RabbitMQ;
 using UserPanel.Core.Services.RabbitMQ;
+using UserPanel.Core.Services.Manager;
+using UserPanel.Service.Services.Manager;
 
 namespace UserPanel.Service.GeneralExtension
 {
@@ -20,6 +22,7 @@ namespace UserPanel.Service.GeneralExtension
             serviceCollection.AddScoped<IAuthenticationService, AuthenticationService>();
             serviceCollection.AddScoped<IUserService, UserService>();
             serviceCollection.AddScoped<ITokenService, TokenService>();
+            serviceCollection.AddScoped<IManagerService, ManagerService>();
             serviceCollection.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             serviceCollection.AddScoped(typeof(IService<,>), typeof(Service<,>));
             serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();

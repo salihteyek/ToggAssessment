@@ -1,10 +1,12 @@
 ﻿using ManagementPanel.Core.Models;
 using ManagementPanel.Core.Repositories;
 using ManagementPanel.Core.Services;
+using ManagementPanel.Core.Services.RabbitMQ;
 using ManagementPanel.Core.UnitOfWork;
 using ManagementPanel.Data;
 using ManagementPanel.Data.Repositories;
 using ManagementPanel.Data.UnitOfWork;
+using ManagementPanel.Publisher.Services;
 using ManagementPanel.Service.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,8 +19,8 @@ namespace ManagementPanel.Service.GeneralExtension
         {
             serviceCollection.AddTransient<IPanelUserService, PanelUserService>();
             serviceCollection.AddTransient(typeof(IRepository<>), typeof(Repository<>));
-            serviceCollection.AddTransient(typeof(IService<,>), typeof(Service<,>));
-            serviceCollection.AddTransient<IUnitOfWork, UnitOfWork>();
+            serviceCollection.AddScoped(typeof(IService<,>), typeof(Service<,>));
+            serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
 
             serviceCollection.AddIdentity<ManagerUser, IdentityRole>(opt =>
             {
@@ -28,5 +30,9 @@ namespace ManagementPanel.Service.GeneralExtension
 
             return serviceCollection;
         }
+
+        public static IServiceCollection ConfigureRabbit(this IServiceCollection services) =>
+            services.AddSingleton<RabbitMQContext>()
+            .AddTransient<IRabbitManager, RabbitManager>();
     }
 }
