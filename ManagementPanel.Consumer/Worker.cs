@@ -1,18 +1,26 @@
 ﻿using ManagementPanel.Consumer.Services;
+using ManagementPanel.Consumer.Services.Grpc;
+using ManagementPanel.Core.Models;
+using ManagementPanel.Core.Services;
+using ManagementPanel.Service.Services;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Text;
 using System.Text.Json;
 
 namespace ManagementPanel.Consumer
 {
     public class Worker : BackgroundService
     {
+        private readonly PanelUserGrpcService _panelUserGrpcService;
         private readonly RabbitMQContext _rabbitMQContext;
+        
         private IModel _channel;
 
-        public Worker(RabbitMQContext rabbitMQContext)
+        public Worker(RabbitMQContext rabbitMQContext, PanelUserGrpcService panelUserGrpcService)
         {
             _rabbitMQContext = rabbitMQContext;
+            _panelUserGrpcService = panelUserGrpcService;
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
@@ -32,14 +40,11 @@ namespace ManagementPanel.Consumer
 
         private async Task Consumer_Received(object sender, BasicDeliverEventArgs @event)
         {
+            var user = JsonSerializer.Deserialize<PanelUser>(Encoding.UTF8.GetString(@event.Body.ToArray()));
 
-            // Gelen kullanıcıyı servise gönder. ordan data katmanına ordan kaydet
-            /*
-            var user = JsonSerializer.Deserialize<User>(Encoding.UTF8.GetString(@event.Body.ToArray()));
-            Console.WriteLine($"Gelen User : {user.Name}");
-            */
-            _channel.BasicAck(@event.DeliveryTag, false);
-
+            var result = await _panelUserGrpcService.TakeRegisteredUser(user);
+            if (result == true)
+                _channel.BasicAck(@event.DeliveryTag, false);
         }
     }
 }
