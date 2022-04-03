@@ -4,7 +4,6 @@ using System.Security.Claims;
 using UserPanel.Core.Dtos;
 using UserPanel.Core.Models;
 using UserPanel.Core.Services;
-using UserPanel.Core.UnitOfWork;
 using UserPanel.Service.Mapping;
 using UserPanel.Shared.Dtos;
 
@@ -14,13 +13,13 @@ namespace UserPanel.Service.Services
     {
         private readonly UserManager<AppUser> _userManager;
         IHttpContextAccessor _httpContextAccessor;
-        IUnitOfWork _unitOfWork;
-        public UserService(UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
+
+        public UserService(UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
-            _unitOfWork = unitOfWork;
         }
+
 
         public async Task<Response<AppUserDto>> Me()
         {
