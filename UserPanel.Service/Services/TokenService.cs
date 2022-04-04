@@ -35,7 +35,7 @@ namespace UserPanel.Service.Services
             return userList;
         }
 
-        public TokenDto CreateToken(AppUser userApp)
+        public async Task<TokenDto> CreateToken(AppUser userApp)
         {
             var accessTokenExpiration = DateTime.Now.AddDays(_tokenOption.AccessTokenExpiration);
             var securityKey = SignService.GetSymmetricSecurityKey(_tokenOption.SecurityKey);

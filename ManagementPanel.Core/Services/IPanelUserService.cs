@@ -8,6 +8,6 @@ namespace ManagementPanel.Core.Services
         Task<IEnumerable<PanelUser>> GetUsersAsync();
         Task SaveRegisteredUserAsync(PanelUser entity);
         Task EditPanelUser(PanelUser entity);
-        void SendEditedPanelUser(PanelUser user);
+        Task SendEditedPanelUser(PanelUser user);
     }
 }

@@ -2,8 +2,8 @@
 {
     public enum UserStatus
     {
-        Pending,
-        Accept,
-        Decline
+        Pending = 0,
+        Accept = 1,
+        Decline = 2
     }
 }

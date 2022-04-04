@@ -40,9 +40,8 @@ namespace ManagementPanel.Consumer
         {
             var user = JsonSerializer.Deserialize<PanelUser>(Encoding.UTF8.GetString(@event.Body.ToArray()));
 
-            var result = await _panelUserGrpcService.TakeRegisteredUser(user);
-            if (result == true)
-                _channel.BasicAck(@event.DeliveryTag, false);
+            await _panelUserGrpcService.TakeRegisteredUser(user);
+            _channel.BasicAck(@event.DeliveryTag, false);
         }
     }
 }

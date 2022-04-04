@@ -41,14 +41,14 @@ namespace UserPanel.Service.Services
 
             if (!await _userManager.CheckPasswordAsync(user, loginDto.Password))
                 return Response<TokenDto>.Fail("Email or Password is wrong", 400, true);
-
+            
             if (!user.Active)
                 return Response<TokenDto>.Fail("Your account is not active", 400, true);
 
             if(user.UserStatus != UserStatus.Accept)
                 return Response<TokenDto>.Fail(user.UserStatus == UserStatus.Decline ? "Your account has been blocked" : "Your account is awaiting approval", 400, true);
-
-            var token = _tokenService.CreateToken(user);
+            
+            var token = await _tokenService.CreateToken(user);
 
             await _unitOfWork.SaveAsync();
 
@@ -65,7 +65,7 @@ namespace UserPanel.Service.Services
                 return Response<AppUserDto>.Fail(new ErrorDto(errors, true), 400);
             }
 
-            _rabbitManager.Publish(user, ExchangeName, ExchangeType.Headers, RoutingName, QueueName);
+            await _rabbitManager.Publish(user, ExchangeName, ExchangeType.Headers, RoutingName, QueueName);
 
             return Response<AppUserDto>.Success(ObjectMapper.Mapper.Map<AppUserDto>(user), 200);
         }

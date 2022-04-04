@@ -5,6 +5,6 @@ namespace UserPanel.Core.Services
 {
     public interface ITokenService
     {
-        TokenDto CreateToken(AppUser userApp);
+        Task<TokenDto> CreateToken(AppUser userApp);
     }
 }

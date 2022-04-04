@@ -2,7 +2,6 @@
 using ManagementPanel.Core.Enums;
 using ManagementPanel.Core.Models;
 using ManagementPanel.Core.Services;
-using ManagementPanel.Service.Mapping;
 using Paneluserpackage;
 using static Paneluserpackage.PanelUserService;
 
@@ -16,8 +15,31 @@ namespace ManagementPanel.GrpcUI.Services
             _service = service;
         }
 
+        #region Save Registered User
+        public override async Task<RegisteredUserResponse> TakeRegisteredUser(RegisteredUserRequest request, ServerCallContext context)
+        {
+            RegisteredUserResponse response = new();
+
+            PanelUser user = new PanelUser()
+            {
+                Id = request.PanelUserModel.Id,
+                FullName = request.PanelUserModel.FullName,
+                UserName = request.PanelUserModel.UserName,
+                Email = request.PanelUserModel.Email,
+                Active = request.PanelUserModel.Active,
+                UserStatus = UserStatus.Pending,
+            };
+
+            await _service.SaveRegisteredUserAsync(user);
+            response.Id = request.PanelUserModel.Id;
+            response.UserStatus = UserStatus.Pending.ToString();
+            return await Task.FromResult(response);
+        }
+
+        #endregion
+
         #region Take and Save registered User
-        public override Task<EditUserResponse> EditUser(EditUserRequest request, ServerCallContext context)
+        public override async Task<EditUserResponse> EditUser(EditUserRequest request, ServerCallContext context)
         {
             EditUserResponse response = new();
             
@@ -31,13 +53,13 @@ namespace ManagementPanel.GrpcUI.Services
                 UserName = user.Result.UserName,
                 FullName = user.Result.FullName
             };
-            _service.EditPanelUser(panelUser);
-            _service.SendEditedPanelUser(panelUser);
+            await _service.EditPanelUser(panelUser);
+            await _service.SendEditedPanelUser(panelUser);
 
             response.Id = request.Id;
             response.Active = request.Active;
             response.UserStatus = request.UserStatus;
-            return Task.FromResult(response);
+            return await Task.FromResult(response);
         }
         #endregion
 
