@@ -33,12 +33,12 @@ namespace UserPanel.Data.Repositories
             return entity;
         }
 
-        public void Remove(Tentity entity)
+        public async Task Remove(Tentity entity)
         {
             _dbSet.Remove(entity);
         }
 
-        public Tentity Update(Tentity entity)
+        public async Task<Tentity> Update(Tentity entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
             return entity;

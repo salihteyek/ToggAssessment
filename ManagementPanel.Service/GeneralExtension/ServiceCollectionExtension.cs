@@ -19,7 +19,6 @@ namespace ManagementPanel.Service.GeneralExtension
         {
             serviceCollection.AddTransient<IPanelUserService, PanelUserService>();
             serviceCollection.AddTransient(typeof(IRepository<>), typeof(Repository<>));
-            serviceCollection.AddScoped(typeof(IService<,>), typeof(Service<,>));
             serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
 
             serviceCollection.AddIdentity<ManagerUser, IdentityRole>(opt =>

@@ -11,11 +11,6 @@ namespace UserPanel.Data.UnitOfWork
             _context = context;
         }
 
-        public void Save()
-        {
-            _context.SaveChanges();
-        }
-
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();

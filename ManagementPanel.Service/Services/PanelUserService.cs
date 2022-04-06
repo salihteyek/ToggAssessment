@@ -1,4 +1,5 @@
-﻿using ManagementPanel.Core.Models;
+﻿using ManagementPanel.Core.Enums;
+using ManagementPanel.Core.Models;
 using ManagementPanel.Core.Repositories;
 using ManagementPanel.Core.Services;
 using ManagementPanel.Core.Services.RabbitMQ;
@@ -32,13 +33,15 @@ namespace ManagementPanel.Service.Services
 
         public async Task EditPanelUser(PanelUser entity)
         {
-            _repository.Update(entity);
-            await _unitOfWork.SaveAsync();   
+            var user = _repository.Where(x => x.Id == entity.Id).FirstOrDefault();
+            user.Active = entity.Active;
+            user.UserStatus = entity.UserStatus.ToString() == "Accept" ? UserStatus.Accept : UserStatus.Decline;
+            await _unitOfWork.SaveAsync();
         }
 
-        public void SendEditedPanelUser(PanelUser user)
+        public async Task SendEditedPanelUser(PanelUser user)
         {
-            _rabbitManager.Publish(user, ExchangeName, ExchangeType.Headers, RoutingName, QueueName);
+            await _rabbitManager.Publish(user, ExchangeName, ExchangeType.Headers, RoutingName, QueueName);
         }
 
         public async Task<PanelUser> GetUserByIdAsync(string id)
