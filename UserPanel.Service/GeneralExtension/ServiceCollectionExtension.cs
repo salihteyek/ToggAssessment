@@ -32,7 +32,7 @@ namespace UserPanel.Service.GeneralExtension
                 opt.User.RequireUniqueEmail = true;
                 opt.Password.RequireNonAlphanumeric = false;
             }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
-            
+
             return serviceCollection;
         }
 
