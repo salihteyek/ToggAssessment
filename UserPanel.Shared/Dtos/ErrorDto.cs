@@ -2,9 +2,9 @@
 {
     public class ErrorDto
     {
-        public List<String> Errors { get; private set; } = new List<string>();
+        public List<String> Errors { get; set; } = new List<string>();
 
-        public bool IsShow { get; private set; }
+        public bool IsShow { get; set; }
 
         public ErrorDto(string error, bool isShow)
         {

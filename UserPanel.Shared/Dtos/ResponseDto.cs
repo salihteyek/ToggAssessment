@@ -4,13 +4,13 @@ namespace UserPanel.Shared.Dtos
 {
     public class Response<T> where T : class
     {
-        public T Data { get; private set; }
-        public int StatusCode { get; private set; }
+        public T Data { get; set; }
+        public int StatusCode { get; set; }
 
         [JsonIgnore]
-        public bool IsSuccessful { get; private set; }
+        public bool IsSuccessful { get; set; }
 
-        public ErrorDto Error { get; private set; }
+        public ErrorDto Error { get; set; }
 
         public static Response<T> Success(T data, int statusCode)
         {
